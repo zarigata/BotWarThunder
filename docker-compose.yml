@@ -1,0 +1,38 @@
+# F3V3R DR34M DOCKER COMPOSITION - ULTIMATE KEYGEN STYLE
+# ====================================================
+version: '3.8'
+
+services:
+  # Main application service
+  f3v3r_dr34m_app:
+    build: .
+    container_name: f3v3r_dr34m_runtime
+    ports:
+      - "11434:11434"  # Ollama default port
+      - "7860:7860"    # Stable Diffusion WebUI port
+    volumes:
+      - .:/f3v3r_dr34m
+      - ./config.yml:/f3v3r_dr34m/config.yml
+    environment:
+      - OLLAMA_MODEL=llama3.2
+    networks:
+      - f3v3r_network
+
+  # Ollama service
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama_service
+    volumes:
+      - ollama_data:/root/.ollama
+    ports:
+      - "11434:11434"
+    networks:
+      - f3v3r_network
+
+networks:
+  f3v3r_network:
+    driver: bridge
+
+volumes:
+  ollama_data:
+    driver: local

@@ -1,0 +1,12 @@
+{
+    "matches": [
+        {
+            "squadron": "asd",
+            "tanks": 4,
+            "planes": 4,
+            "helicopters": 1,
+            "result": "WIN",
+            "timestamp": "2025-01-14T12:02:29.724339"
+        }
+    ]
+}

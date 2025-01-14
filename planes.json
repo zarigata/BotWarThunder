@@ -1,0 +1,45 @@
+{
+    "planes": {
+        "USA": [
+            "F-4C Phantom II",
+            "F-4E Phantom II",
+            "F-14A Tomcat",
+            "F-14B Tomcat",
+            "F-16A Fighting Falcon",
+            "F-16C Fighting Falcon",
+            "A-10A Thunderbolt II",
+            "F-5E Tiger II"
+        ],
+        "USSR": [
+            "MiG-21bis",
+            "MiG-23MLD",
+            "MiG-29",
+            "Su-25",
+            "Su-27",
+            "Su-17M4",
+            "MiG-27M",
+            "MiG-19PT"
+        ],
+        "Germany": [
+            "MiG-21MF",
+            "F-4F Phantom II",
+            "MiG-23BN",
+            "Tornado IDS",
+            "F-104G Starfighter"
+        ],
+        "Britain": [
+            "Phantom FG.1",
+            "Phantom FGR.2",
+            "Jaguar GR.1",
+            "Harrier GR.3",
+            "Lightning F.6"
+        ],
+        "Japan": [
+            "F-1",
+            "F-4EJ Phantom II",
+            "F-104J Starfighter",
+            "T-2",
+            "F-86F-40 Sabre"
+        ]
+    }
+}
