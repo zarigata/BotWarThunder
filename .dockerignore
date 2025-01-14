@@ -1,0 +1,31 @@
+# [*] F3V3R DR34M D0CK3R 1GN0R3 L1ST
+
+# Python cache files
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv
+.env
+.venv
+
+# Logs and databases
+*.log
+*.sqlite3
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Development files
+.git
+.gitignore
+README.md
+
+# Temporary files
+*.tmp
+*.bak
+
+# [*] H4CK3R Z0N3 PR0T3CT3D!

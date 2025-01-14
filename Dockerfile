@@ -1,43 +1,44 @@
-# F3V3R DR34M DOCKER RUNTIME - ULTIMATE KEYGEN STYLE
-# ================================================
-# Yo dawg, we're bout to drop some SICK infrastructure! 
+# .____________________.
+# |                  |
+# |  F3V3R DR34M     |
+# |  W4R THUND3R     |
+# |  D0CK3R B41LD    |
+# |                  |
+# |  [2025 RUL3Z!]   |
+# |__________________|
+#
+# CR3D1TZ:
+# - M4ST3R: Z4R1G4T4
+# - T34M: F3V3R DR34M
 
-# Base image that works on both Windows and Linux
-FROM python:3.11-slim
+# Use official Python runtime as base image
+FROM python:3.10-slim-bullseye
 
-# 1337 METADATA
-LABEL maintainer="F3V3R DR34M CREW"
-LABEL version="1.337"
-LABEL description="ULTIMATE CROSS-PLATFORM DOCKER RUNTIME"
+# [*] S3T UP TH3 H4CK3R Z0N3
+LABEL maintainer="F3V3R DR34M T34M <z4r1g4t4@f3v3rdr34m.com>"
+LABEL version="1.0.0"
+LABEL description="W4R THUND3R D1SC0RD B0T - ULT1M4T3 TR4CK3R"
 
-# Set environment variables for maximum SWAG
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV OLLAMA_HOST=0.0.0.0
-ENV OLLAMA_PORT=11434
+# [*] PR3P4R3 TH3 B4TTL3F13LD
+WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    wget \
-    curl \
-    git \
-    && rm -rf /var/lib/apt/lists/*
-
-# Create our elite workspace
-WORKDIR /f3v3r_dr34m
-
-# Copy configuration and requirements
-COPY requirements.txt config.yml ./
-
-# Install Python dependencies
+# [*] 1NST4LL TH3 W34P0NRY
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy project files
-COPY . .
+# [*] DR0P TH3 C0D3 B0MBS
+COPY bot.py .
+COPY config.json .
+COPY match_history.json .
 
-# Expose ports for Ollama and potential services
-EXPOSE 11434
-EXPOSE 7860
+# [*] S3T UP TH3 C0MM4ND C3NT3R
+ENV PYTHONUNBUFFERED=1
 
-# Ultimate runtime command
-CMD ["python", "main.py"]
+# [*] PR3P4R3 F0R D3PL0YM3NT
+EXPOSE 8000
+
+# [*] TR1GG3R TH3 M1SS10N
+CMD ["python", "bot.py"]
+
+# [*] H4CK TH3 PL4N3T! 
+# [*] F3V3R DR34M RUL3Z!
