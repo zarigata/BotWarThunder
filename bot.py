@@ -10,6 +10,7 @@
 
 CR3D1TZ:
 - C0D3D BY: F3V3R DR34M T34M
+- M4ST3R: Z4R1G4T4 (ざりがた)
 - GR33TZ: ALL WAR THUNDER PLAYERS!
 """
 
@@ -125,6 +126,7 @@ async def on_ready():
     """
     [*] B0T 1N1T14L1Z3D SUCC3SSFULLY!
     [*] H4CK TH3 PL4N3T!
+    [*] CR34T3D BY Z4R1G4T4 (ざりがた)
     """
     print(f'''
     ╔══════════════════════════════╗
@@ -162,7 +164,7 @@ async def comecar(interaction: discord.Interaction):
     active_matches[interaction.channel_id] = MatchTracker(interaction.channel_id)
     
     embed = discord.Embed(
-        title="🎮 War Thunder Match Tracking Session",
+        title="🎮 War Thunder Match Tracking Session ざりがた",
         description="Session started! Use /rg to register matches and /final to end the session.",
         color=discord.Color.blue()
     )
