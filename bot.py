@@ -1,16 +1,17 @@
 """
-.__________________.
-|                  |
-|  F3V3R DR34M     |
-|  W4R THUND3R     |
-|  TR4CK3R v1.0    |
-|                  |
-|  [2025 RUL3Z!]   |
-|__________________|
+.-------------------.
+|     [CONFIDENCIAL]|
+| RASTREADOR DE     |
+| GUERRA THUNDER    |
+| VERSÃO: ALFA      |
+|                   |
+| [ULTRA SECRETO]   |
+'-------------------'
 
-CR3D1TZ:
-- C0D3D BY: F3V3R DR34M T34M
-- GR33TZ: ALL WAR THUNDER PLAYERS!
+BRIEFING DA MISSÃO:
+- OPERAÇÃO: SISTEMA DE RASTREAMENTO DE BATALHA
+- AUTORIZAÇÃO: ULTRA SECRETO
+- STATUS: ATIVO
 """
 
 import discord
@@ -40,7 +41,8 @@ HISTORY_FILE = 'match_history.json'
 
 def load_match_history():
     """
-    [*] L04D1NG M4TCH H1ST0RY...
+    [*] ACESSANDO REGISTROS DE BATALHA CONFIDENCIAIS...
+    [*] DESCRIPTOGRAFANDO DADOS...
     """
     if not os.path.exists(HISTORY_FILE):
         return {"matches": []}
@@ -52,7 +54,8 @@ def load_match_history():
 
 def save_match_history(match_data):
     """
-    [*] S4V1NG M4TCH H1ST0RY...
+    [*] CRIPTOGRAFANDO DADOS...
+    [*] SALVANDO NO BANCO DE DADOS...
     """
     history = load_match_history()
     history["matches"].append({
@@ -64,16 +67,16 @@ def save_match_history(match_data):
 
 def normalize_result(result: str) -> str:
     """
-    [*] N0RM4L1Z1NG R3SULT...
+    [*] ANALISANDO RESULTADO DA BATALHA...
     """
     result = result.lower().strip()
-    win_options = ['w', 'v', '1', 'win', 'victory']
-    loss_options = ['l', 'd', '0', 'loss', 'defeat']
+    win_options = ['v', '1', 'win', 'victoria', 'vitória']
+    loss_options = ['d', '0', 'loss', 'derrota']
     
     if result in win_options:
-        return 'WIN'
+        return 'VITÓRIA'
     elif result in loss_options:
-        return 'LOSS'
+        return 'DERROTA'
     else:
         return None
 
@@ -86,30 +89,32 @@ class MatchTracker:
         self.best_streak = 0
         self.current_embed = None
 
-    def add_match(self, squadron, tanks, planes, helicopters, result):
+    def add_match(self, squadron, tanks, planes, helicopters, spaa, bomber, result):
         match = {
             'squadron': squadron,
             'tanks': tanks,
             'planes': planes,
             'helicopters': helicopters,
+            'spaa': spaa,
+            'bomber': bomber,
             'result': result,
             'timestamp': datetime.now().isoformat()
         }
         self.matches.append(match)
         save_match_history(match)
         
-        if result == 'WIN':
+        if result == 'VITÓRIA':
             self.win_streak += 1
-            self.best_streak = max(self.best_streak, self.win_streak)
+            self.best_streak = max(self.win_streak, self.best_streak)
         else:
             self.win_streak = 0
 
     def get_stats(self):
         total_matches = len(self.matches)
         if total_matches == 0:
-            return "No matches recorded"
+            return "Nenhuma batalha registrada"
             
-        wins = sum(1 for match in self.matches if match['result'] == 'WIN')
+        wins = sum(1 for match in self.matches if match['result'] == 'VITÓRIA')
         win_rate = (wins / total_matches) * 100
         
         return {
@@ -123,203 +128,225 @@ class MatchTracker:
 @bot.event
 async def on_ready():
     """
-    [*] B0T 1N1T14L1Z3D SUCC3SSFULLY!
-    [*] H4CK TH3 PL4N3T!
+    [*] SISTEMA DE RASTREAMENTO DE BATALHA ONLINE...
+    [*] AGUARDANDO IMPLANTAÇÃO...
     """
     print(f'''
     ╔══════════════════════════════╗
-    ║  W4R THUND3R TR4CK3R L04D3D  ║
-    ║  SYST3M: {platform.system()}  
-    ║  B0T: {bot.user.name}        
-    ║  ST4TUS: 0NL1N3              ║
+    ║  RASTREADOR DE GUERRA THUNDER║
+    ║  SISTEMA: {platform.system()} ║
+    ║  BOT: {bot.user.name}        ║
+    ║  STATUS: ONLINE              ║
     ╚══════════════════════════════╝
     ''')
     try:
         synced = await bot.tree.sync()
-        print(f"[*] SYNCED {len(synced)} commands!")
+        print(f"[*] Sincronizou {len(synced)} comandos")
     except Exception as e:
-        print(f"[!] ERR0R: {str(e)}")
+        print(f"[!] ERRO: {str(e)}")
 
-@bot.tree.command(name="comecar", description="Start tracking a new match session")
+@bot.tree.command(name="comecar", description="Iniciar operações de combate")
 async def comecar(interaction: discord.Interaction):
     """
-    [*] 1N1T14L1Z1NG N3W M4TCH S3SS10N...
+    [*] INICIANDO OPERAÇÕES DE COMBATE...
+    [*] IMPLANTANDO SISTEMA DE RASTREAMENTO DE BATALHA...
     """
     if interaction.channel_id in active_matches:
-        await interaction.response.send_message("❌ There's already an active session in this channel!", ephemeral=True)
+        await interaction.response.send_message("[!] OPERAÇÕES DE COMBATE JÁ EM ANDAMENTO!", ephemeral=True)
         return
 
     # Get users in voice channel
-    voice_channel = interaction.user.voice.channel if interaction.user.voice else None
-    squad_members = ""
-    
-    if voice_channel:
-        users_in_vc = "\n".join([member.display_name for member in voice_channel.members])
-        squad_members = f"```{users_in_vc}```"
-    else:
-        squad_members = "```No squad members in voice channel```"
+    try:
+        voice_channel = interaction.user.voice.channel
+        squad_members = ", ".join([member.name for member in voice_channel.members]) if voice_channel else "Nenhum membro na sala de voz"
+    except:
+        squad_members = "Nenhum membro na sala de voz"
 
     active_matches[interaction.channel_id] = MatchTracker(interaction.channel_id)
     
     embed = discord.Embed(
-        title="🎮 War Thunder Match Tracking Session",
-        description="Session started! Use /rg to register matches and /final to end the session.",
-        color=discord.Color.blue()
+        title="[INÍCIO DA MISSÃO] Sessão de Rastreamento de Combate Iniciada",
+        description="[!] COMANDANTE: Use /rg para registrar engajamentos e /final para concluir a missão.",
+        color=discord.Color.from_rgb(50, 168, 82)  # Verde militar
     )
     
-    embed.add_field(name="Squad Members", value=squad_members, inline=False)
+    embed.add_field(name="[MEMBROS DO ESQUADRÃO]", value=squad_members, inline=False)
     
     await interaction.response.send_message(embed=embed)
     active_matches[interaction.channel_id].current_embed = await interaction.channel.send(embed=embed)
 
-@bot.tree.command(name="rg", description="Register a match result (w/l, v/d, 1/0)")
+@bot.tree.command(name="rg", description="Registrar resultado da batalha")
 async def rg(
     interaction: discord.Interaction,
     squadron: str,
     result: str,
     tanks: int,
     planes: int = 0,
-    helicopters: int = 0
+    helicopters: int = 0,
+    spaa: int = 0,
+    bomber: int = 0
 ):
     """
-    [*] R3G1ST3R1NG M4TCH R3SULT...
+    [*] REGISTRANDO RESULTADO DA BATALHA...
+    [*] ANALISANDO RESULTADOS...
     """
     if interaction.channel_id not in active_matches:
-        await interaction.response.send_message("❌ No active tracking session! Use /comecar first!", ephemeral=True)
+        await interaction.response.send_message("[!] NENHUMA OPERAÇÃO DE COMBATE ENCONTRADA! Use /comecar primeiro!", ephemeral=True)
         return
 
-    # Normalize the result
-    normalized_result = normalize_result(result)
-    if normalized_result is None:
-        await interaction.response.send_message(
-            "❌ Invalid result! Please use:\n" + 
-            "- Win: w, v, 1, win, victory\n" +
-            "- Loss: l, d, 0, loss, defeat",
-            ephemeral=True
-        )
+    result = normalize_result(result)
+    if not result:
+        await interaction.response.send_message("[!] RESULTADO DE BATALHA INVÁLIDO!", ephemeral=True)
         return
 
     tracker = active_matches[interaction.channel_id]
-    tracker.add_match(squadron, tanks, planes, helicopters, normalized_result)
+    tracker.add_match(squadron, tanks, planes, helicopters, spaa, bomber, result)
 
-    # Update embed with new match data
     embed = discord.Embed(
-        title="ち🎮 War Thunder Match Tracking Session ",
-        description="Current session statistics:",
-        color=discord.Color.green() if normalized_result == 'WIN' else discord.Color.red()
+        title="[RELATÓRIO DE COMBATE] Resultado da Batalha Registrado",
+        color=0x32a852 if result == "VITÓRIA" else 0x8b0000  # Verde militar para vitória, vermelho escuro para derrota
     )
+    embed.add_field(name="[ESQUADRÃO INIMIGO]", value=squadron, inline=True)
+    embed.add_field(name="[RESULTADO]", value=result, inline=True)
+    embed.add_field(name="[BLINDADOS]", value=f"{tanks} unidades", inline=True)
+    embed.add_field(name="[FORÇA AÉREA]", value=f"{planes} unidades", inline=True)
+    embed.add_field(name="[HELICÓPTEROS]", value=f"{helicopters} unidades", inline=True)
+    embed.add_field(name="[DEFESA ANTIAÉREA]", value=f"{spaa} unidades", inline=True)
+    embed.add_field(name="[BOMBARDEIROS]", value=f"{bomber} unidades", inline=True)
 
-    # Format match history
-    match_history = ""
-    for idx, match in enumerate(tracker.matches, 1):
-        result_emoji = "🟢" if match['result'] == 'WIN' else "🔴"
-        vehicles = []
-        if match['tanks'] > 0:
-            vehicles.append(f"{match['tanks']} tanks")
-        if match['planes'] > 0:
-            vehicles.append(f"{match['planes']} planes")
-        if match['helicopters'] > 0:
-            vehicles.append(f"{match['helicopters']} helicopters")
-            
-        vehicles_str = " with " + ", ".join(vehicles) if vehicles else ""
-        match_history += f"{result_emoji} Match {idx}: {match['squadron']}{vehicles_str}\n"
+    if result == "VITÓRIA":
+        embed.add_field(name="[SEQUÊNCIA DE VITÓRIAS]", value=f"{tracker.win_streak} batalhas", inline=True)
+        embed.add_field(name="[MELHOR CAMPANHA]", value=f"{tracker.best_streak} batalhas", inline=True)
 
-    embed.add_field(name="Match History", value=match_history or "No matches yet", inline=False)
-    
-    # Add current streak
-    embed.add_field(name="Current Streak", value=f"🔥 {tracker.win_streak}" if tracker.win_streak > 0 else "No streak", inline=True)
-    embed.add_field(name="Best Streak", value=f"⭐ {tracker.best_streak}", inline=True)
+    tracker.current_embed = embed
+    await interaction.response.send_message(embed=embed)
 
-    # Update the existing embed message
-    await tracker.current_embed.edit(embed=embed)
-    await interaction.response.send_message("✅ Match registered!", ephemeral=True)
-
-@bot.tree.command(name="history", description="View match history")
+@bot.tree.command(name="history", description="Acessar registros de batalha confidenciais")
 async def history(interaction: discord.Interaction, days: int = 7):
     """
-    [*] L04D1NG M4TCH H1ST0RY...
+    [*] ACESSANDO REGISTROS DE BATALHA CONFIDENCIAIS...
+    [*] DESCRIPTOGRAFANDO DADOS...
     """
     history = load_match_history()
     
     if not history["matches"]:
-        await interaction.response.send_message("No match history found!", ephemeral=True)
+        await interaction.response.send_message("[!] NENHUM REGISTRO ENCONTRADO NO BANCO DE DADOS!", ephemeral=True)
         return
         
     cutoff_date = datetime.now().timestamp() - (days * 24 * 60 * 60)
     recent_matches = [
-        match for match in history["matches"] 
-        if datetime.fromisoformat(match["timestamp"]).timestamp() > cutoff_date
+        match for match in history["matches"]
+        if datetime.fromisoformat(match["timestamp"]).timestamp() >= cutoff_date
     ]
     
     if not recent_matches:
-        await interaction.response.send_message(f"No matches found in the last {days} days!", ephemeral=True)
+        await interaction.response.send_message(f"[!] NENHUMA BATALHA REGISTRADA NOS ÚLTIMOS {days} DIAS!", ephemeral=True)
         return
         
-    wins = sum(1 for match in recent_matches if match['result'] == 'WIN')
+    wins = sum(1 for match in recent_matches if match['result'] == 'VITÓRIA')
     total = len(recent_matches)
     win_rate = (wins / total) * 100
     
     embed = discord.Embed(
-        title=f"📊 Match History (Last {days} days)",
-        description=f"Total Matches: {total}\nWin Rate: {win_rate:.2f}%",
-        color=discord.Color.blue()
+        title=f"[RELATÓRIO DE INTELIGÊNCIA] Últimos {days} Dias",
+        description=f"[ESTATÍSTICAS]\nTotal de Engajamentos: {total}\nTaxa de Vitória: {win_rate:.2f}%",
+        color=discord.Color.from_rgb(50, 168, 82)  # Verde militar
     )
     
     # Show last 10 matches
-    last_matches = recent_matches[-10:]
     match_list = ""
-    for match in last_matches:
+    for match in recent_matches[-10:]:
         date = datetime.fromisoformat(match["timestamp"]).strftime("%Y-%m-%d %H:%M")
-        result_emoji = "🟢" if match['result'] == 'WIN' else "🔴"
         vehicles = []
         if match['tanks'] > 0:
-            vehicles.append(f"{match['tanks']} tanks")
+            vehicles.append(f"{match['tanks']} blindados")
         if match['planes'] > 0:
-            vehicles.append(f"{match['planes']} planes")
+            vehicles.append(f"{match['planes']} aviões")
         if match['helicopters'] > 0:
-            vehicles.append(f"{match['helicopters']} helicopters")
+            vehicles.append(f"{match['helicopters']} helicópteros")
+        if match.get('spaa', 0) > 0:
+            vehicles.append(f"{match['spaa']} defesa antiaérea")
+        if match.get('bomber', 0) > 0:
+            vehicles.append(f"{match['bomber']} bombardeiros")
             
-        vehicles_str = " with " + ", ".join(vehicles) if vehicles else ""
-        match_list += f"{result_emoji} [{date}] {match['squadron']}{vehicles_str}\n"
+        vehicles_str = " com " + ", ".join(vehicles) if vehicles else ""
+        match_list += f"{'✅' if match['result'] == 'VITÓRIA' else '❌'} [{date}] {match['squadron']}{vehicles_str}\n"
     
-    embed.add_field(name="Recent Matches", value=match_list or "No recent matches", inline=False)
+    embed.add_field(name="Batalhas Recentes", value=match_list or "Sem batalhas recentes", inline=False)
     
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
-@bot.tree.command(name="final", description="End the tracking session and show final statistics")
+@bot.tree.command(name="delete", description="Destruir último registro de batalha")
+async def delete(interaction: discord.Interaction):
+    """
+    [*] INICIANDO PROTOCOLO DE DESTRUIÇÃO DE REGISTRO...
+    [*] AGUARDANDO CONFIRMAÇÃO...
+    """
+    history = load_match_history()
+    
+    if not history["matches"]:
+        await interaction.response.send_message("[!] NENHUM REGISTRO ENCONTRADO NO BANCO DE DADOS!", ephemeral=True)
+        return
+    
+    deleted_match = history["matches"].pop()
+    
+    with open(HISTORY_FILE, 'w') as f:
+        json.dump(history, f, indent=4)
+    
+    embed = discord.Embed(
+        title="[!] DESTRUIÇÃO DE REGISTRO CONCLUÍDA",
+        description="O seguinte registro de batalha foi removido do banco de dados:",
+        color=discord.Color.from_rgb(139, 0, 0)  # Vermelho escuro
+    )
+    embed.add_field(name="[FORÇA INIMIGA]", value=deleted_match["squadron"], inline=True)
+    embed.add_field(name="[RESULTADO]", value=deleted_match["result"], inline=True)
+    embed.add_field(name="[BLINDADOS]", value=f"{deleted_match['tanks']} unidades", inline=True)
+    embed.add_field(name="[FORÇA AÉREA]", value=f"{deleted_match['planes']} unidades", inline=True)
+    embed.add_field(name="[HELICÓPTEROS]", value=f"{deleted_match['helicopters']} unidades", inline=True)
+    embed.add_field(name="[DEFESA ANTIAÉREA]", value=f"{deleted_match.get('spaa', 'N/A')} unidades", inline=True)
+    embed.add_field(name="[ESTRATÉGICO]", value=f"{deleted_match.get('bomber', 'N/A')} unidades", inline=True)
+    embed.add_field(name="[TIMESTAMP]", value=deleted_match["timestamp"], inline=True)
+    embed.set_footer(text="[!] ESTE REGISTRO FOI PERMANENTEMENTE DELETADO")
+    
+    await interaction.response.send_message(embed=embed)
+
+@bot.tree.command(name="final", description="Concluir operações de combate")
 async def final(interaction: discord.Interaction):
     """
-    [*] F1N4L1Z1NG TR4CK1NG S3SS10N...
+    [*] INICIANDO PROTOCOLO DE CONCLUSÃO DE MISSÃO...
+    [*] GERANDO RELATÓRIO FINAL...
     """
     if interaction.channel_id not in active_matches:
-        await interaction.response.send_message("❌ No active tracking session!", ephemeral=True)
+        await interaction.response.send_message("[!] NENHUMA OPERAÇÃO DE COMBATE ENCONTRADA!", ephemeral=True)
         return
 
     tracker = active_matches[interaction.channel_id]
-    stats = tracker.get_stats()
-    
-    if isinstance(stats, str):
-        await interaction.response.send_message(stats, ephemeral=True)
+    if not tracker.matches:
+        await interaction.response.send_message("[!] NENHUMA BATALHA REGISTRADA NESTA SESSÃO!", ephemeral=True)
         return
 
-    embed = discord.Embed(
-        title="📊 Final Session Statistics",
-        description=f"Session duration: {datetime.now() - tracker.start_time}",
-        color=discord.Color.gold()
-    )
+    total_matches = len(tracker.matches)
+    wins = sum(1 for match in tracker.matches if match['result'] == 'VITÓRIA')
+    win_rate = (wins / total_matches) * 100
 
-    embed.add_field(name="Total Matches", value=stats['total_matches'], inline=True)
-    embed.add_field(name="Wins", value=stats['wins'], inline=True)
-    embed.add_field(name="Losses", value=stats['losses'], inline=True)
-    embed.add_field(name="Win Rate", value=f"{stats['win_rate']:.2f}%", inline=True)
-    embed.add_field(name="Best Streak", value=stats['best_streak'], inline=True)
+    embed = discord.Embed(
+        title="[MISSÃO CONCLUÍDA] Relatório Final de Combate",
+        description=f"Duração da Operação: {datetime.now() - tracker.start_time}",
+        color=discord.Color.from_rgb(50, 168, 82)  # Verde militar
+    )
+    embed.add_field(name="[TOTAL DE ENGAJAMENTOS]", value=str(total_matches), inline=True)
+    embed.add_field(name="[VITÓRIAS]", value=str(wins), inline=True)
+    embed.add_field(name="[TAXA DE SUCESSO]", value=f"{win_rate:.1f}%", inline=True)
+    embed.add_field(name="[MELHOR SEQUÊNCIA]", value=str(tracker.best_streak), inline=True)
+    embed.set_footer(text="[!] MISSÃO CUMPRIDA - AGUARDANDO PRÓXIMA IMPLANTAÇÃO")
 
     await interaction.response.send_message(embed=embed)
     del active_matches[interaction.channel_id]
 
 def run_bot():
     """
-    [*] ST4RT1NG B0T 3NG1N3...
+    [*] INICIANDO SISTEMA DE RASTREAMENTO DE BATALHA...
+    [*] AGUARDANDO IMPLANTAÇÃO...
     """
     bot.run(config['discord_token'])
 

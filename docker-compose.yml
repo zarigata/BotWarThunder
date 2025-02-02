@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  war-thunder-bot:
+    build: .
+    container_name: war-thunder-combat-logger
+    restart: always
+    volumes:
+      - ./match_history.json:/app/match_history.json
+      - ./config.json:/app/config.json
+    environment:
+      - PYTHONUNBUFFERED=1
+    networks:
+      - discord-bot-network
+
+networks:
+  discord-bot-network:
+    driver: bridge

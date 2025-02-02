@@ -26,18 +26,25 @@ pip install -r requirements.txt
 ```
 
 ### Docker Deployment
-1. Build the Docker image:
+1. Ensure you have Docker and Docker Compose installed
+2. Configure your `config.json` with the Discord bot token
+3. Deploy the bot using Docker Compose:
 ```bash
-docker build -t war-thunder-bot .
+# Build and start the bot
+docker-compose up -d --build
+
+# View logs
+docker-compose logs -f war-thunder-bot
+
+# Stop the bot
+docker-compose down
 ```
 
-2. Run the Docker container:
-```bash
-docker run -d \
-  -e DISCORD_TOKEN=your_token_here \
-  --name war-thunder-bot \
-  war-thunder-bot
-```
+#### Docker Deployment Features
+- Automatic restart on failure
+- Persistent match history
+- Isolated environment
+- Easy scaling and management
 
 ## 🎮 Usage
 
