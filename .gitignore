@@ -1,0 +1,35 @@
+# Python virtual environment
+venv/
+env/
+.env/
+.venv/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local configuration files
+config.json
+*.ini
+*.cfg
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# Operating System
+.DS_Store
+Thumbs.db
