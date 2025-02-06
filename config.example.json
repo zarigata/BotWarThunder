@@ -1,0 +1,24 @@
+{
+    "ollama": {
+        "model": "llama2",
+        "host": "localhost",
+        "port": 11434,
+        "pre_prompt": "You are a helpful AI assistant"
+    },
+    "server": {
+        "host": "127.0.0.1",
+        "port": 8080
+    },
+    "settings": {
+        "debug_mode": false,
+        "log_level": "INFO",
+        "platform_specific": {
+            "windows": {
+                "game_path": "C:/Program Files/War Thunder"
+            },
+            "linux": {
+                "game_path": "/usr/games/WarThunder"
+            }
+        }
+    }
+}
